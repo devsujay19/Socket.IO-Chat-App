@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Socket.IO Chat App</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input
+        placeholder="Type your message..."
+        id="input"
+        autocomplete="on"
+      /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const messages = document.getElementById("messages");
+
+      // const user = prompt();
+      // if (user == "") {
+      //   alert("A name is required to join the chatroom!");
+      // }
+
+      while (true) {
+        var user = prompt(
+          "Enter your username for the chatroom  conversation :"
+        );
+        if (user !== "") {
+          break;
+        } else {
+          alert(
+            "An username is strictly required for a person to join this chatroom! Try again!"
+          );
+        }
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", (msg) => {
+        const item = document.createElement("li");
+        item.innerHTML = "<b>" + user + "</b> said: " + msg;
+
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </body>
+</html>
